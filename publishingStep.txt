@@ -1,0 +1,8 @@
+执行构建测试：
+pnpm clean && pnpm build
+
+检查打包分析：
+pnpm build --analyze
+
+准备发布：
+pnpm release

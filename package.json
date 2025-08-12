@@ -1,0 +1,79 @@
+{
+  "name": "vite-plugin-uniapp-injector",
+  "version": "1.0.9",
+  "description": "A Vite plugin for automatically injecting components into UniApp pages during compilation, perfect for mini-program and App development.",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "type": "module",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/3605Wink/vite-inset-loader.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsup --watch src --ignore-watch examples",
+    "build": "tsup --clean",
+    "test": "cd examples/my-vue3-project && pnpm weixin",
+    "lint": "eslint . --fix",
+    "format": "prettier --write .",
+    "clean": "rimraf dist coverage",
+    "prepublishOnly": "pnpm run lint && pnpm run build",
+    "postversion": "pnpm run build",
+    "release": "pnpm run clean && pnpm run build && npx bumpp --push --tag --commit && pnpm publish",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
+  },
+  "keywords": [
+    "vite",
+    "loader",
+    "vue",
+    "uni-app",
+    "component-injection"
+  ],
+  "author": "Jeddy",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^17.0.45",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "bumpp": "^7.2.0",
+    "conventional-changelog-cli": "^4.1.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8",
+    "rimraf": "^5.0.5",
+    "rollup-plugin-visualizer": "^5.12.0",
+    "tsup": "^6.7.0",
+    "typescript": "^4.9.5",
+    "vite": "^5.2.8"
+  },
+  "dependencies": {
+    "@antfu/eslint-config": "^5.2.0",
+    "@vue/compiler-sfc": "^3.4.33",
+    "chokidar": "^3.6.0",
+    "debug": "^4.3.5",
+    "magic-string": "^0.30.17",
+    "strip-json-comments": "^5.0.1",
+    "tslog": "^4.9.3",
+    "vue-loader": "^17.4.2"
+  }
+}
