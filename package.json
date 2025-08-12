@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-uniapp-injector",
-  "version": "1.0.9",
+  "version": "1.0.0",
   "description": "A Vite plugin for automatically injecting components into UniApp pages during compilation, perfect for mini-program and App development.",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
