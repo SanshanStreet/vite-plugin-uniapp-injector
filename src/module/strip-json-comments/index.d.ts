@@ -1,17 +1,17 @@
 export type Options = {
-	/**
+  /**
 	Strip trailing commas in addition to comments.
 
 	@default false
 	*/
-	readonly trailingCommas?: boolean;
+  readonly trailingCommas?: boolean;
 
-	/**
+  /**
 	Replace comments and trailing commas with whitespace instead of stripping them entirely.
 
 	@default true
 	*/
-	readonly whitespace?: boolean;
+  readonly whitespace?: boolean;
 };
 
 /**
@@ -35,7 +35,4 @@ JSON.parse(stripJsonComments(json));
 //=> {unicorn: 'cake'}
 ```
 */
-export default function stripJsonComments(
-	jsonString: string,
-	options?: Options
-): string;
+export default function stripJsonComments(jsonString: string, options?: Options): string;
