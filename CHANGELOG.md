@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.1 (2025-08-13)
+
+### Documentation
+
+- 📚 完善 README.md，添加详细的使用示例
+- 📝 优化 CHANGELOG.md 格式和内容
+- 💡 补充高级特性使用说明
+
 ## 1.1.0 (2025-08-13)
 
 ### Features
