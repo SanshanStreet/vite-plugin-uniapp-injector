@@ -9,7 +9,9 @@
 - 📦 **分包支持** - 完整支持小程序分包
 - 🛠 **灵活配置** - 支持全局和页面级别的精细化配置
 - ⚡️ **高性能** - 智能缓存和增量编译支持
-- 🔍 **类型安全** - 完整的 TypeScript 类型支持
+- 🔍 **类型安全** - 完整的 TypeScript 类型支持和智能提示
+- 🎨 **路由类型** - 自动生成页面路由类型，支持自定义生成路径
+- 💡 **智能提示** - 组件名称和页面路径的自动补全
 
 ## 🚀 快速开始
 
@@ -35,13 +37,33 @@ import { defineConfig } from 'vite';
 import uni from '@dcloudio/vite-plugin-uni';
 import UniViteRootInjector from 'vite-plugin-uniapp-injector';
 
+//若配置dts，需手动引入
+import type { Path } from './types/auto-route'; 
+
+// 定义组件
+const components = {
+  message: '<gy-message ref="messageRef"></gy-message>',
+  dialog: '<gy-dialog ref="dialogRef"></gy-dialog>',
+} as const;
+
 export default defineConfig({
   plugins: [
     uni(),
-    UniViteRootInjector({
-      components: {
-        message: '<gy-message ref="messageRef"></gy-message>',
-        dialog: '<gy-dialog ref="dialogRef"></gy-dialog>',
+    UniViteRootInjector<Path, typeof components>({
+      // 自定义路由类型生成路径
+      dts: resolve(__dirname, 'types/auto-route.d.ts'),
+      // 组件配置（支持自动类型推断）
+      components,
+      // 注入配置
+      insertPos: {
+        mode: 'GLOBAL',
+        exclude: ['pages/login/index'],
+        handlePos: [
+          {
+            page: 'pages/home/index', // 自动补全页面路径
+            insert: ['message'], // 自动补全组件名称
+          },
+        ],
       },
     }),
   ],
@@ -73,12 +95,13 @@ export default defineConfig({
 
 ### 插件配置项
 
-| 配置项     | 说明                   | 类型                     | 默认值               |
-| ---------- | ---------------------- | ------------------------ | -------------------- |
-| components | 全局组件配置映射       | `Record<string, string>` | `{}`                 |
-| includes   | 需要处理的文件路径模式 | `string[]`               | `['src/**/*.vue']`   |
-| insertPos  | 插入位置配置           | `InsertPosConfig`        | `{ mode: 'GLOBAL' }` |
-| watchFile  | 监听的文件路径         | `string`                 | `src/pages.json`     |
+| 配置项     | 说明                   | 类型                     | 默认值                |
+| ---------- | ---------------------- | ------------------------ | --------------------- |
+| dts        | 路由类型文件生成路径   | `string`                 | `src/auto-route.d.ts` |
+| components | 全局组件配置映射       | `Record<string, string>` | `{}`                  |
+| includes   | 需要处理的文件路径模式 | `string[]`               | `['src/**/*.vue']`    |
+| insertPos  | 插入位置配置           | `InsertPosConfig`        | `{ mode: 'GLOBAL' }`  |
+| watchFile  | 监听的文件路径         | `string`                 | `src/pages.json`      |
 
 ### InsertPosConfig 配置
 
