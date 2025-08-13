@@ -1,10 +1,27 @@
 # Changelog
 
+## 1.1.0 (2025-08-13)
+
+### Features
+
+- 🔥 新增路由类型文件(.d.ts)自定义生成路径配置，支持通过 `options.dts` 指定目标路径
+- ✨ 智能组件类型推导，支持从 `components` 对象自动推断可用组件列表
+- 🎯 优化类型系统，支持 `T`（路由类型）和 `CObj`（组件类型）独立配置
+- 🛠️ 改进文件生成逻辑，增加文件内容比对，避免重复生成
+- 💡 完善 IDE 智能提示，路由路径和组件名称均可自动补全
+
+### Optimizations
+
+- ⚡️ 优化类型文件生成性能，仅在内容变更时写入
+- 📝 改进类型定义文档注释，提供更清晰的使用说明
+
 ## 1.0.0 (2025-08-12)
 
 ### Features
 
-* Initial release
-* Support for automatic component injection in UniApp pages
-* Configuration options for global and page-specific injection
-* Full TypeScript support
+- 🎉 首次发布
+- 🔌 支持在 UniApp 页面自动注入组件
+- ⚙️ 提供全局注入和页面级别的精确控制
+- 🎨 支持组件样式和属性自定义配置
+- 📦 完整的 TypeScript 类型支持
+- 📚 详细的配置项文档

@@ -1,70 +1,56 @@
 // 定义插入模式类型
 export type InsertMode = 'GLOBAL';
 
-// 定义样式属性类型
-export type CSSProperties = Record<string, string>;
-
-/**
- * 组件配置
- */
-export interface ComponentConfig {
-  /** 组件标识符 */
-  [key: string]: string;
-}
-
 /**
  * 页面处理配置项
  * @template T - 组件名称类型
  */
-export interface HandlePosItem<T extends string = string> {
+export interface HandlePosItem<T extends string = string, C extends string = string> {
   /** 页面路径（如 'pages/home' 或 '/pages/home'） */
-  page?: string;
+  page?: T;
   /** 需要插入的组件列表 */
-  insert?: T[];
+  insert?: C[];
 }
 
 /**
  * 插入位置配置
  * @template T - 组件名称类型
  */
-export interface InsertPosConfig<T extends string = string> {
+export interface InsertPosConfig<T extends string = string, C extends string = string> {
   /** 插入模式 */
   mode?: InsertMode;
   /** 排除的页面路径列表 */
-  exclude?: string[];
+  exclude?: T[];
   /** 页面特定配置 */
-  handlePos?: HandlePosItem<T>[];
-}
-
-/**
- * 组件样式选项
- */
-export interface ComponentStyleOptions {
-  /** CSS 类名 */
-  class?: string;
-  /** 元素 ID */
-  id?: string;
-  /** 内联样式 */
-  style?: CSSProperties;
-  /** 其他 HTML 属性 */
-  [key: string]: unknown;
+  handlePos?: HandlePosItem<T, C>[];
 }
 
 /**
  * Vite 插件配置对象
  * @template T - 组件名称类型
  */
-export interface ConfigObject<T extends string = string> {
+export interface ConfigObject<T extends string = string, C extends string = string> {
+  // 组件类型>
   /** 组件定义映射 */
-  components?: ComponentConfig;
+  components?: Record<C, string>;
   /** 包含的路径列表 */
-  includes?: string[];
+  includes?: T[];
   /** 监听的文件路径模式（支持 glob） */
   watchFile?: string | string[];
   /** 插入位置配置 */
-  insertPos?: InsertPosConfig<T>;
+  insertPos?: InsertPosConfig<T, C>;
+  /** pages.json 配置 */
+  dts?: string;
 }
 
+// 自动推断组件 key 的工具类型
+export type InferComponentKeys<T> = T extends { components: Record<infer K, string> } ? K : string;
+
+// 自动推断的配置类型
+export type AutoConfigObject<
+  T extends string = string,
+  CObj extends Record<string, string> = Record<string, string>,
+> = Omit<ConfigObject<T, Extract<keyof CObj, string>>, 'components'> & { components: CObj };
 /**
  * 页面配置
  */
@@ -135,6 +121,4 @@ export interface LabelConfig {
 export interface ViteInsetLoaderOptions {
   /** 标签名称 */
   label: string;
-  /** 标签属性配置 */
-  options: ComponentStyleOptions;
 }

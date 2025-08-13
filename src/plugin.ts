@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import path from 'path';
-import { Logger } from 'tslog';
+import { logger } from './tslog';
 import { Plugin } from 'vite';
-import { ConfigObject } from './types/plugin';
+import { AutoConfigObject } from './types/plugin';
 import { initializePages, analyzePages, insertLabel } from './utils/index';
 import { transformSfc } from './utils/descriptor';
+import { generateRouteTypes } from './utils/route';
 
 // 定义插件状态接口
 interface PluginState {
@@ -20,22 +21,11 @@ const CONSTANTS = {
   VUE_FILE_REGEX: /\.vue$/,
 } as const;
 
-const logger = new Logger({
-  name: 'vite-inset-loader',
-  minLevel: process.env.NODE_ENV === 'production' ? 3 : 1,
-  type: 'pretty',
-  hideLogPositionForProduction: true,
-  prettyLogTimeZone: 'local',
-  prettyLogTemplate: '{{yyyy}}.{{mm}}.{{dd}} {{hh}}:{{MM}}:{{ss}}\t{{logLevelName}}\t',
-});
-
-export const UniViteRootInjector = (
-  options: ConfigObject = {
-    insertPos: {
-      mode: 'GLOBAL',
-    },
-  },
-): Plugin => {
+// 支持外部传入Path类型，实现ConfigObject的泛型类型提示
+export function UniViteRootInjector<
+  T extends string = string,
+  CObj extends Record<string, string> = Record<string, string>,
+>(options: AutoConfigObject<T, CObj>): Plugin {
   // 插件状态管理
   const state: PluginState = {
     pagesMap: {},
@@ -60,9 +50,9 @@ export const UniViteRootInjector = (
   const initialize = () => {
     try {
       const { rootPath, pagesPath } = getValidatedPaths();
-
       initializePages(pagesPath, rootPath, options);
       state.pagesMap = analyzePages();
+      generateRouteTypes(Object.keys(state.pagesMap), options);
       state.totalPages = Object.keys(state.pagesMap).length;
       state.isInitialized = true;
 
@@ -97,15 +87,12 @@ export const UniViteRootInjector = (
 
   return {
     name: 'vite-inset-loader',
-
     buildStart() {
       logger.debug('Starting build initialization');
-
       if (state.isInitialized) {
         logger.trace('Already initialized, skipping');
         return;
       }
-
       initialize();
     },
 
@@ -172,4 +159,4 @@ export const UniViteRootInjector = (
       }
     },
   };
-};
+}
